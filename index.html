@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gebirgsübersicht - Vollbild im Querformat</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    iframe {
+      border: none;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* Hinweis für Hochformat */
+    .rotate-warning {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    @media only screen and (orientation: portrait) {
+      .rotate-warning {
+        display: flex;
+      }
+    }
+
+    /* Start Button */
+    #fullscreen-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px 40px;
+      font-size: 18px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hinweis für Hochformat -->
+  <div class="rotate-warning">
+    Bitte drehen Sie Ihr Gerät ins Querformat.
+  </div>
+
+  <!-- Vollbild Start Button -->
+  <button id="fullscreen-button">Vollbild starten</button>
+
+  <!-- Eingebettete Website -->
+  <iframe src="https://bildung4alle.at/geo/oesterreich/gebirge.html" id="fullscreen-iframe" style="display:none;"></iframe>
+
+  <script>
+    // Funktion für den Vollbildmodus
+    function requestFullScreen(element) {
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if (element.mozRequestFullScreen) { // Firefox
+        element.mozRequestFullScreen();
+      } else if (element.webkitRequestFullscreen) { // Chrome, Safari und Opera
+        element.webkitRequestFullscreen();
+      } else if (element.msRequestFullscreen) { // IE/Edge
+        element.msRequestFullscreen();
+      }
+    }
+
+    // Starte Vollbildmodus bei Klick
+    document.getElementById('fullscreen-button').addEventListener('click', function() {
+      var iframe = document.getElementById('fullscreen-iframe');
+      iframe.style.display = 'block';  // Zeige das Iframe erst nach dem Klick
+      requestFullScreen(iframe); // Starte den Vollbildmodus
+      this.style.display = 'none'; // Verstecke den Button nach dem Start
+    });
+
+    // Orientation prüfen
+    function checkOrientation() {
+      const warning = document.querySelector('.rotate-warning');
+      if (window.innerHeight > window.innerWidth) {
+        warning.style.display = 'flex';
+      } else {
+        warning.style.display = 'none';
+      }
+    }
+
+    // Orientation Events
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('load', checkOrientation);
+  </script>
+
+</body>
+</html>
