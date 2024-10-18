@@ -39,11 +39,15 @@
       z-index: 999;
     }
 
-    @media only screen and (orientation: portrait) {
-      .rotate-warning {
-        display: flex;
-      }
-    }
+	@media screen and (orientation: portrait) {
+	  body {
+		transform: rotate(90deg);
+		transform-origin: left top;
+		width: 100vh;
+		height: 100vw;
+		overflow-x: hidden;
+	  }
+	}
 
     /* Start Button */
     #fullscreen-button {
@@ -73,7 +77,7 @@
   <button id="fullscreen-button">Vollbild starten</button>
 
   <!-- Eingebettete Website -->
-  <iframe src="https://bildung4alle.at/geo/oesterreich/gebirge.html" id="fullscreen-iframe" style="display:none;"></iframe>
+  <iframe src="gebirge.html" id="fullscreen-iframe" style="display:none;"></iframe>
 
   <script>
     // Funktion für den Vollbildmodus
