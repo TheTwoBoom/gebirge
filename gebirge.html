@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<!--
+	NOTES:
+	1. All tokens are represented by '$' sign in the template.
+	2. You can write your code only wherever mentioned.
+	3. All occurrences of existing tokens will be replaced by their appropriate values.
+	4. Blank lines will be removed automatically.
+	5. Remove unnecessary comments before creating your template.
+-->
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="authoring-tool" content="Adobe_Animate_CC">
+<title>gebirge</title>
+<!-- write your code here -->
+<style>
+	body{background-color: #729685;}
+  #animation_container, #_preload_div_ {
+	position:absolute;
+	margin:auto;
+	left:0;right:0;
+	top:0;bottom:0;
+  }
+</style>
+<script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+<script>
+function LoadGFonts(families, comp) {				
+	var lib=comp.getLibrary();				
+	var googleObject = {type: "Google", loadedFonts: 0, totalFonts: families.length, callOnLoad: lib.gfontAvailable};				
+	for(var i =0; i < families.length; i++)				
+		isFontAvailable(gFontsFamilies[i], googleObject);				
+}
+function isFontAvailable(font, obj) {				
+	var timeOut = 5000;				
+	var delay = 200;				
+	var interval = 0;				
+	var timeElapsed = 0;				
+	function checkFont() {				
+		var node = document.createElement("span");				
+		node.innerHTML = "giItT1WQy@!-/#";				
+		node.style.position      = "absolute";				
+		node.style.left          = "-1000px";				
+		node.style.top           = "-1000px";				
+		node.style.fontSize      = "300px";				
+		node.style.fontFamily    = "sans-serif";				
+		node.style.fontVariant   = "normal";				
+		node.style.fontStyle     = "normal";				
+		node.style.fontWeight    = "normal";				
+		node.style.letterSpacing = "0";				
+		document.body.appendChild(node);				
+		var width = node.offsetWidth;				
+		node.style.fontFamily = font+","+node.style.fontFamily;				
+		var returnVal = false;				
+		if((node && node.offsetWidth != width) || timeElapsed >=timeOut) {				
+			obj.loadedFonts++;				
+			if(interval)				
+				clearInterval(interval);				
+			obj.callOnLoad(font, obj.totalFonts);				
+			returnVal = true;				
+		}				
+		if(node) {				
+			node.parentNode.removeChild(node);				
+			node = null;				
+		}				
+		timeElapsed += delay;				
+		return returnVal;				
+	}				
+	if(!checkFont()) {				
+		interval = setInterval(checkFont, delay);				
+	}				
+}
+</script>
+<script>
+	var gFontsFamilies = ["Roboto","Roboto Condensed"];
+</script>
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:500&subset=latin">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:700&subset=latin">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:regular&subset=latin">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto+Condensed:regular&subset=latin">
+<script src="gebirge.js"></script>
+<script>
+// Global Scripts
+	//--------------------Zeit---------------------------
+createjs.Ticker.setFPS(30);
+createjs.Ticker.useRAF = true;
+createjs.Ticker.paused = true;
+var fehler = 0;
+var punkte = 0;
+var fragen = 0;
+var fehlversuche = 0;
+var spieldauer = 0;
+var bonuspunkte = 0;
+var aktTextNr;
+function resetSpiel(){
+	fehler = 0;
+	punkte = 0;
+}
+function timeString(seconds) {
+	var min = Math.floor(seconds / 60);
+	var sec = seconds - (60 * min);
+	var min2digit;
+	(min < 10) ? min2digit = "0" + min : min2digit = min;
+	var sec2digit;
+	(sec < 10) ? sec2digit = "0" + sec : sec2digit = sec;
+	return min2digit + ":" + sec2digit;
+}
+function formatTausend(zahl) {
+	a = "";
+	b = "";
+	z = String(zahl);
+	for (i = 1; i < z.length + 1; i++) {
+		a += z.substr(z.length - i, 1);
+		if (i % 3 == 0 && i != z.length) {
+			a += ".";
+		}
+	}
+	for (i = 0; i < a.length + 1; i++) {
+		b += a.substr(a.length - i, 1);
+	}
+	return b;
+}
+function formatMill(zahl) {
+	if (zahl >= 1000000) {
+		return String(zahl / 1000000).split(".").join(",") + " Mill";
+	} else {
+		return formatTausend(zahl);
+	}
+}
+function position(anzahl, spalten, xStart, yStart, xAbstand, yAbstand) {
+	var zeilen = Math.ceil(anzahl / spalten);
+	var pos = new Array();
+	for (e = 0; e < anzahl; e++) {
+		pos[e] = new createjs.Point(xStart + Math.floor(e / zeilen) * xAbstand, yStart + yAbstand * (e % zeilen));
+	}
+	var posMix = new Array();
+	for (i = 0; i < anzahl; i++) {
+		var zuZa = Math.floor(Math.random() * pos.length);
+		posMix[i] = pos[zuZa];
+		var curZahl = pos.splice(zuZa, 1);
+	}
+	return posMix;
+}
+//-----------------------Berge, Gebirge, Seen--------------------------------
+var gebirge = new Array();
+gebirge[0]=["g_dachstein", "Dachstein"];
+gebirge[1]=["g_eisenerzeralpen", "Eisenerzer Alpen"];
+gebirge[2]=["g_gurktaleralpen", "Gurktaler Alpen"];
+gebirge[3]=["g_hohetauern", "Hohe Tauern"];
+gebirge[4]=["g_kaisergebirge", "Kaisergebirge"];
+gebirge[5]=["g_karawanken", "Karawanken"];
+gebirge[6]=["g_karnischealpen", "Karnische Alpen"];
+gebirge[7]=["g_karwendel", "Karwendel"];
+gebirge[8]=["g_kitzbueheleralpen", "Kitzbüheler Alpen"];
+gebirge[9]=["g_lechtaleralpen", "Lechtaler Alpen "];
+gebirge[10]=["g_niederetauern", "Niedere Tauern"];
+gebirge[11]=["g_oetztaleralpen", "Ötztaler Alpen"];
+gebirge[12]=["g_schneeberg_rax", "Schneeberg und Rax"];
+gebirge[13]=["g_silvretta", "Silvrettagruppe"];
+gebirge[14]=["g_stubaieralpen", "Stubaier Alpen"];
+gebirge[15]=["g_tennengebirge", "Tennengebirge"];
+gebirge[16]=["g_totesgebirge", "Totes Gebirge"];
+gebirge[17]=["g_wienerwald", "Wienerwald"];
+gebirge[18]=["g_zillertaleralpen", "Zillertaler Alpen"];
+gebirge[19]=["g_allgaueralpen", "Allgäuer Alpen"];
+gebirge[20]=["g_boehmerwald", "Böhmerwald"];
+gebirge[21]=["g_ennstaleralpen", "Ennstaler Alpen "];
+gebirge[22]=["g_fischbacheralpen", "Fischbacher Alpen"];
+gebirge[23]=["g_gailtaleralpen", "Gailtaler Alpen"];
+gebirge[24]=["g_gleinalpe", "Gleinalpe"];
+gebirge[25]=["g_guensergebirge", "Günser Gebirge"];
+gebirge[26]=["g_hochschwab", "Hochschwab"];
+gebirge[27]=["g_koralpe", "Koralpe"];
+gebirge[28]=["g_leithagebirge", "Leithagebirge"];
+gebirge[29]=["g_packalpe", "Packalpe"];
+gebirge[30]=["g_raetikon", "Rätikon"];
+gebirge[31]=["g_sengsengebirge", "Sengsengebirge"];
+gebirge[32]=["g_steinernesmeer", "Steinerenes Meer"];
+gebirge[33]=["g_tuxeralpen", "Tuxer Alpen"];
+gebirge[34]=["g_wettersteingebirge", "Wettersteingebirge"];
+var berg = new Array();
+berg[0]=["bes_grossglockner", "Großglockner", "3 798 m", "höchster Berg Österreichs, Kärntens und Tirols"];
+berg[1]=["bes_wildspitze", "Wildspitze", "3 768 m", "höchster Berg der Ötztaler Alpen"];
+berg[2]=["bes_grossvenediger", "Großvenediger", "3 662 m ", "höchster Berg Salzburgs"];
+berg[3]=["bes_hochfeiler", "Hochfeiler", "3 510 m", "höchster Berg der Zillertaler Alpen"];
+berg[4]=["bes_zuckerhuetl", "Zuckerhütl", "3 507 m ", "höchster Berg der Stubaier Alpen"];
+berg[5]=["bes_pizbuin", "Piz Buin", "3 312 m", "höchster Berg Vorarlbergs"];
+berg[6]=["bes_sonnblick", "Sonnblick", "3 105 m", "höchstgelegenste Wetterstation Österreichs"];
+berg[7]=["bes_dachstein", "Dachstein", "2 995 m", "höchster Berg der Steiermark und Oberösterreichs"];
+berg[8]=["bes_zugspitze", "Zugspitze", " 2 965 m", "höchster Berg Deutschlands"];
+berg[9]=["bes_schneeberg", "Schneeberg", "2 076 m", "höchster Berg Niederösterreichs"];
+berg[10]=["bes_geschriebenenstein", "Geschriebenenstein", "884 m ", "höchster Berg des Burgenlandes"];
+berg[11]=["bes_hermannskogel", "Hermannskogel", "542 m ", "höchster Berg Wiens"];
+var gebirgeB = new Array();
+gebirgeB[0]=["g_dachstein", "Dachstein"];
+gebirgeB[1]=["g_eisenerzeralpen", "Eisenerzer Alpen"];
+gebirgeB[2]=["g_hohetauern", "Hohe Tauern"];
+gebirgeB[3]=["g_karawanken", "Karawanken"];
+gebirgeB[4]=["g_karnischealpen", "Karnische Alpen"];
+gebirgeB[5]=["g_karwendel", "Karwendel"];
+gebirgeB[6]=["g_kitzbueheleralpen", "Kitzbüheler Alpen"];
+gebirgeB[7]=["g_lechtaleralpen", "Lechtaler Alpen "];
+gebirgeB[8]=["g_niederetauern", "Niedere Tauern"];
+gebirgeB[9]=["g_oetztaleralpen", "Ötztaler Alpen"];
+gebirgeB[10]=["g_schneeberg_rax", "Schneeberg und Rax"];
+gebirgeB[11]=["g_silvretta", "Silvrettagruppe"];
+gebirgeB[12]=["g_stubaieralpen", "Stubaier Alpen"];
+gebirgeB[13]=["g_zillertaleralpen", "Zillertaler Alpen"];
+gebirgeB[14]=["g_steinernesmeer", "Steinerenes Meer"];
+var gebirgeC = new Array();
+gebirgeC[0]=["g_dachstein", "Dachstein"];
+gebirgeC[1]=["g_eisenerzeralpen", "Eisenerzer Alpen"];
+gebirgeC[2]=["g_gurktaleralpen", "Gurktaler Alpen"];
+gebirgeC[3]=["g_hohetauern", "Hohe Tauern"];
+gebirgeC[4]=["g_kaisergebirge", "Kaisergebirge"];
+gebirgeC[5]=["g_karawanken", "Karawanken"];
+gebirgeC[6]=["g_karnischealpen", "Karnische Alpen"];
+gebirgeC[7]=["g_karwendel", "Karwendel"];
+gebirgeC[8]=["g_kitzbueheleralpen", "Kitzbüheler Alpen"];
+gebirgeC[9]=["g_lechtaleralpen", "Lechtaler Alpen "];
+gebirgeC[10]=["g_niederetauern", "Niedere Tauern"];
+gebirgeC[11]=["g_oetztaleralpen", "Ötztaler Alpen"];
+gebirgeC[12]=["g_schneeberg_rax", "Schneeberg und Rax"];
+gebirgeC[13]=["g_silvretta", "Silvrettagruppe"];
+gebirgeC[14]=["g_stubaieralpen", "Stubaier Alpen"];
+gebirgeC[15]=["g_tennengebirge", "Tennengebirge"];
+gebirgeC[16]=["g_totesgebirge", "Totes Gebirge"];
+gebirgeC[17]=["g_wienerwald", "Wienerwald"];
+gebirgeC[18]=["g_zillertaleralpen", "Zillertaler Alpen"];
+gebirgeC[19]=["g_allgaueralpen", "Allgäuer Alpen"];
+gebirgeC[20]=["g_boehmerwald", "Böhmerwald"];
+gebirgeC[21]=["g_ennstaleralpen", "Ennstaler Alpen"];
+gebirgeC[22]=["g_fischbacheralpen", "Fischbacher Alpen"];
+gebirgeC[23]=["g_gailtaleralpen", "Gailtaler Alpen"];
+gebirgeC[24]=["g_gleinalpe", "Gleinalpe"];
+gebirgeC[25]=["g_guensergebirge", "Günser Gebirge"];
+gebirgeC[26]=["g_hochschwab", "Hochschwab"];
+gebirgeC[27]=["g_koralpe", "Koralpe"];
+gebirgeC[28]=["g_leithagebirge", "Leithagebirge"];
+gebirgeC[29]=["g_packalpe", "Packalpe"];
+gebirgeC[30]=["g_raetikon", "Rätikon"];
+gebirgeC[31]=["g_sengsengebirge", "Sengsengebirge"];
+gebirgeC[32]=["g_steinernesmeer", "Steinerenes Meer"];
+gebirgeC[33]=["g_tuxeralpen", "Tuxer Alpen"];
+gebirgeC[34]=["g_wettersteingebirge", "Wettersteingebirge"];</script>
+<script>
+var canvas, stage, exportRoot, anim_container, dom_overlay_container, fnStartAnimation;
+function init() {
+	canvas = document.getElementById("canvas");
+	anim_container = document.getElementById("animation_container");
+	dom_overlay_container = document.getElementById("dom_overlay_container");
+	var comp=AdobeAn.getComposition("40EAC480AAA45B4290FB940726E4FF66");
+	var lib=comp.getLibrary();
+	try {
+		if(!(typeof gFontsFamilies === 'undefined' || gFontsFamilies === null))
+			LoadGFonts(gFontsFamilies, comp);		
+		if(!(typeof totalTypekitFonts === 'undefined' || totalTypekitFonts === null)) {			
+			var typekitObject = {type: 'Typekit', loadedFonts: 0, totalFonts: totalTypekitFonts, callOnLoad: lib.tfontAvailable};		
+			Typekit.load({
+			async: true,
+			'fontactive': function(family) {
+				isFontAvailable(family, typekitObject);
+				}
+			});
+		}
+	} catch(e) {};
+	var loader = new createjs.LoadQueue(false);
+	loader.addEventListener("fileload", function(evt){handleFileLoad(evt,comp)});
+	loader.addEventListener("complete", function(evt){handleComplete(evt,comp)});
+	var lib=comp.getLibrary();
+	loader.loadManifest(lib.properties.manifest);
+}
+function handleFileLoad(evt, comp) {
+	var images=comp.getImages();	
+	if (evt && (evt.item.type == "image")) { images[evt.item.id] = evt.result; }	
+}
+function handleComplete(evt,comp) {
+	//This function is always called, irrespective of the content. You can use the variable "stage" after it is created in token create_stage.
+	var lib=comp.getLibrary();
+	var ss=comp.getSpriteSheet();
+	var queue = evt.target;
+	var ssMetadata = lib.ssMetadata;
+	for(i=0; i<ssMetadata.length; i++) {
+		ss[ssMetadata[i].name] = new createjs.SpriteSheet( {"images": [queue.getResult(ssMetadata[i].name)], "frames": ssMetadata[i].frames} )
+	}
+	var preloaderDiv = document.getElementById("_preload_div_");
+	preloaderDiv.style.display = 'none';
+	canvas.style.display = 'block';
+	exportRoot = new lib.gebirge();
+	stage = new lib.Stage(canvas);
+	stage.enableMouseOver();	
+	//Registers the "tick" event listener.
+	fnStartAnimation = function() {
+		stage.addChild(exportRoot);
+		createjs.Ticker.framerate = lib.properties.fps;
+		createjs.Ticker.addEventListener("tick", stage);
+	}	    
+	//Code to support hidpi screens and responsive scaling.
+	AdobeAn.makeResponsive(true,'both',true,1,[canvas,preloaderDiv,anim_container,dom_overlay_container]);	
+	AdobeAn.compositionLoaded(lib.properties.id);
+	fnStartAnimation();
+}
+</script>
+<!-- write your code here -->
+</head>
+<body onload="init();" style="margin:0px;">
+	<div id="animation_container" style="background-color:rgba(109, 145, 131, 1.00); width:1000px; height:700px">
+		<canvas id="canvas" width="1000" height="700" style="position: absolute; display: none; background-color:rgba(109, 145, 131, 1.00);"></canvas>
+		<div id="dom_overlay_container" style="pointer-events:none; overflow:hidden; width:1000px; height:700px; position: absolute; left: 0px; top: 0px; display: none;">
+		</div>
+	</div>
+    <div id='_preload_div_' style='position:absolute; top:0; left:0; display: inline-block; height:700px; width: 1000px; text-align: center;'>	<span style='display: inline-block; height: 100%; vertical-align: middle;'></span>	<img src="images/_preloader.gif" style='vertical-align: middle; max-height: 100%'/></div>
+</body>
+</html>
